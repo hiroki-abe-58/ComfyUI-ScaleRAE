@@ -85,7 +85,8 @@ quality against the paper's benchmarks (the pack reproduces the official outputs
   the prompt. For request prompts `force` gives images very close to the official ones (same noise, slightly different conditioning).
 - **guidance / cfg_mode.** Guidance 1.0 (default) is the official default and what the paper's evaluation uses. In the released code
   a guidance above 1 has **no effect** (its default `cfg_interval` makes the guidance step return the conditional prediction; upstream
-  issue [#7](https://github.com/ZitengWangNYU/Scale-RAE/issues/7)): that is `cfg_mode = official-cli`. `cfg_mode = standard` (default)
+  issue [#7](https://github.com/ZitengWangNYU/Scale-RAE/issues/7); fix proposed in
+  [PR #10](https://github.com/ZitengWangNYU/Scale-RAE/pull/10)): that is `cfg_mode = official-cli`. `cfg_mode = standard` (default)
   applies classifier-free guidance at every step, which makes images darker and more saturated as guidance grows:
 
   ![Guidance 1, 2, 3, 5 in standard mode](docs/images/guidance.png)

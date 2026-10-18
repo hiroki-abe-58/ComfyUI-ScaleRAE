@@ -50,7 +50,7 @@ SigLIP-2 版にはまだ対応していません。
   `image_forced: true` とスキップしたテキストが残ります）。`model` は公式の挙動のみ（テキスト応答はエラー）、`force` は常にプロンプト直後
   から画像を開始します。
 - **guidance / cfg_mode**: 既定の guidance 1.0 は公式の既定値で、論文の評価設定です。公開コードでは guidance > 1 が**効きません**
-  （upstream issue #7）。`official-cli` はその挙動を再現し、`standard`（既定）は毎ステップ classifier-free guidance を適用します。
+  （upstream issue #7。修正案を PR #10 として提出済み）。`official-cli` はその挙動を再現し、`standard`（既定）は毎ステップ classifier-free guidance を適用します。
 - **dtype**: `float32` は公式と一致。`float16` は VRAM が約半分で float32 に近い結果（PSNR 37〜56 dB）、`bfloat16` は同じメモリで差が
   大きめ（26〜33 dB）。RAE デコーダは常に float32 で動かします（float16 ではオーバーフローして全画像が同じ平坦な絵になったため）。
 - **seed / batch_size**: 同じ条件・seed・環境なら同じ画像。バッチは seed, seed + 1, ... を使います。CPU と GPU では同じ seed でも初期

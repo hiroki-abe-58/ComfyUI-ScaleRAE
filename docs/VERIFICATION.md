@@ -78,6 +78,10 @@ ids with transformers 4.37, 4.50.3 (CI), 5.20.1 and the latest release (CI). The
 - Official code, guidance 3 vs 1 (garden, seed 42): PSNR 70.25 dB, maximum pixel difference 1, latent relative L2 2.8e-5 — the
   guidance option of the released code has no effect (upstream issue #7: the default `cfg_interval = [-1e4, 1e4]` makes
   `forward_with_cfg` return the conditional prediction). The pack's `official-cli` mode reproduces this bit for bit (table above).
+- With the two-value fix proposed upstream (ZitengWangNYU/Scale-RAE#10: projector default `cfg_interval = [-1e4, -1e4]`), the
+  official code gives bit-identical results for the five guidance-1 jobs and applies guidance at 3 (PSNR 14.06 / 17.16 dB against
+  the unpatched guidance-3 images); the pack's `standard` mode gives the same latents and images as the patched official code, bit for
+  bit (2 of 2 guidance-3 jobs, official environment).
 - `standard` mode, guidance 3 vs 1 (cat, seed 42): PSNR 14.54 dB — guidance takes effect (`docs/images/guidance.png`, guidance 1, 2,
   3, 5 for two prompts). Guidance 1 is identical in both modes (`tests/test_runtime.py::test_guidance_modes`).
 
