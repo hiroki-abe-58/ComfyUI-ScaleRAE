@@ -27,6 +27,10 @@ SigLIP-2 版にはまだ対応していません。
   差は画素あたり最大 1/255（PSNR 65 dB 以上）でした（ライブラリのバージョン差による丸め）。
 - float32 / float16 / bfloat16、CPU、バッチ、`image_start` の 3 モード、guidance の 2 モード、テキストのみの応答、中断、Unload、
   keep_loaded off を実モデルで確認しました。
+- クリーンインストール（新規 ComfyUI v0.38.0 + 新規 Python 3.12 環境 + このリポジトリの git clone + requirements + `tools/download_models.py`
+  によるデコーダ取得と SHA-256 検証）でも、開発環境と 7 件中 7 件で同じ画像になり、同梱ワークフローがそのまま動きました。
+- CI（GitHub Actions、Ubuntu / Windows、transformers 4.50.3 と最新、Python 3.10 / 3.12）では小さなランダムモデルで CPU テストと
+  ComfyUI 実キューを実行し、同梱した公式コードが固定コミットとバイト単位で一致することも検査しています。
 
 ## インストール
 

@@ -132,13 +132,25 @@ the described subjects.
 - Windows commit charge: 25.4 GiB before loading, 47.1 GiB peak during loading, 42.8 GiB with the model resident (float32); the
   ComfyUI process's working set was about 3 GiB.
 
-## 8. Automated tests (CI)
+## 8. Clean install
 
-`tests/` (39 tests) runs on the CPU with a tiny random model that has the official file layout (safetensors with the same tensor
+Fresh ComfyUI v0.38.0 checkout, fresh Python 3.12 virtual environment (torch 2.14.1+cu130, then ComfyUI's requirements, then this
+pack's `requirements.txt`: transformers 5.20.1, timm 1.0.30), `git clone` of this repository into `custom_nodes`. The decoder was
+downloaded with `tools/download_models.py --only webssl300m_decoder` (53 s, all three files SHA-256 verified); the 16 GB generator
+folder was linked in through `extra_model_paths.yaml` and checked with `--verify-only`. ComfyUI loaded the pack without warnings and
+listed both folders. Through the queue the seven jobs of section 1 gave 7 of 7 images identical to the development environment
+(PSNR 64.98 dB or more against the official run), and `workflows/api/t2i_basic.json` and `t2i_fp16_batch.json` ran unchanged.
+`comfy node validate` passed; the Registry archive from `comfy node pack` has 42 files (393 KB: the runtime package, the vendored
+code, tools, workflows, docs and license files; no tests, scripts or images).
+
+## 9. Automated tests (CI)
+
+`tests/` (42 tests) runs on the CPU with a tiny random model that has the official file layout (safetensors with the same tensor
 names, real tokenizer files, a `model.pt` decoder), so the real loader, sampler and decoder code run: prompt ids against the official
 ids, loading checks (missing tensors, wrong encoder space, inference mode, dtype on CPU), sampling (shape, range, reproducibility,
 global RNG untouched, step counts, guidance modes, the three `image_start` modes, restoring the DiT after an error), the nodes as
 ComfyUI loads them (registration, model folder discovery, ComfyUI's own validation of the shipped workflows, batches, keep-loaded,
 unload, interrupt), the vendored code against the upstream commit, and the absence of environment-variable, network and process code
 in the installed package. `scripts/ci_queue_check.py` starts a real ComfyUI on the CPU and runs the shipped workflow through the queue
-with the tiny model (reproducibility, batch, keep-loaded off, unload).
+with the tiny model (reproducibility, batch, keep-loaded off, unload). CI matrix: Ubuntu 24.04 and Windows with Python 3.12, torch
+2.14.1 and transformers 4.50.3 / latest, plus Ubuntu with Python 3.10, torch 2.8.0 and transformers 4.50.3; all five jobs pass.

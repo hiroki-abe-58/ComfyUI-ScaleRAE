@@ -192,5 +192,17 @@ def test_incomplete_or_foreign_checkpoints_are_refused(tiny_models, tmp_path):
     runtime.release()
 
 
+def test_head_configurations_the_pack_does_not_run_are_refused():
+    """Normalisation-stats files (the only path where the vendored head would torch.load a file), other loss modes and DDT heads."""
+    from tiny_model import GENERATOR_CONFIG
+
+    with pytest.raises(ValueError, match="diffusion_norm_stats_path"):
+        runtime.diff_head_config({**GENERATOR_CONFIG, "diffusion_norm_stats_path": "stats.pt"})
+    with pytest.raises(ValueError, match="vision_loss_mode"):
+        runtime.diff_head_config({**GENERATOR_CONFIG, "vision_loss_mode": "token"})
+    with pytest.raises(ValueError, match="DDT"):
+        runtime.diff_head_config({**GENERATOR_CONFIG, "diffusion_model_hidden_size": [64, 64]})
+
+
 def test_vendored_package_is_registered_once():
     assert runtime.vendored() is runtime.vendored()

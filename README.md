@@ -38,6 +38,9 @@ Windows 11, RTX 5090 (32 GB), ComfyUI v0.38.0 (details and raw numbers in [docs/
   images differ by at most 1 of 255 per pixel (PSNR 65 dB or more), which is the library versions.
 - **Real jobs:** float32 / float16 / bfloat16, CPU, batches, the three `image_start` modes, guidance in both modes, text-only answers,
   interrupt, unload and keep-loaded off, all with the real weights.
+- **Clean install:** fresh ComfyUI v0.38.0, fresh Python 3.12 environment, `git clone` of this repository, `pip install -r
+  requirements.txt`, the decoder downloaded with `tools/download_models.py` (SHA-256 verified): the seven jobs above give the same
+  images as the development environment (7 of 7), and both shipped workflows run unchanged.
 - **CI** (GitHub Actions; Ubuntu and Windows; transformers 4.50.3 and latest; Python 3.10 and 3.12): CPU tests with a tiny random
   model in the official file layout, the vendored code compared byte for byte with the pinned upstream commit, the prompt ids
   compared with the official ones, and a real ComfyUI queue on the CPU. CI does not download the weights (about 17.6 GB).
