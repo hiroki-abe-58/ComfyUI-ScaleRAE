@@ -45,7 +45,7 @@ Windows 11, RTX 5090 (32 GB), ComfyUI v0.38.0 (details and raw numbers in [docs/
   model in the official file layout, the vendored code compared byte for byte with the pinned upstream commit, the prompt ids
   compared with the official ones, and a real ComfyUI queue on the CPU. CI does not download the weights (about 17.6 GB).
 
-**Not checked:** Linux or macOS with a GPU, AMD / Apple GPUs, GPUs with less than about 10 GB, other ComfyUI versions, and image
+**Not checked:** Linux or macOS with a GPU, AMD / Apple GPUs, GPUs with less than about 10 GB, other ComfyUI versions with the real model (the CPU tests and the real-queue check also run against ComfyUI v0.41.0 in CI), and image
 quality against the paper's benchmarks (the pack reproduces the official outputs; it does not re-evaluate the model).
 
 ## Install

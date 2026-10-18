@@ -158,3 +158,9 @@ unload, interrupt), the vendored code against the upstream commit, and the absen
 in the installed package. `scripts/ci_queue_check.py` starts a real ComfyUI on the CPU and runs the shipped workflow through the queue
 with the tiny model (reproducibility, batch, keep-loaded off, unload). CI matrix: Ubuntu 24.04 and Windows with Python 3.12, torch
 2.14.1 and transformers 4.50.3 / latest, plus Ubuntu with Python 3.10, torch 2.8.0 and transformers 4.50.3; all five jobs pass.
+
+## ComfyUI v0.41.0
+
+Since 2026-10-19 the CI also runs the test suite and the real-queue check against ComfyUI v0.41.0 (commit
+`98cc0bf84b7cb1383654c5b402e7612d875d6d22`, Ubuntu 24.04, Python 3.12 / torch 2.14.1), next to v0.38.0, the release the
+real-model checks above used. Both pass.
