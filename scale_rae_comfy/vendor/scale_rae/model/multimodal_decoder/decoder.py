@@ -1,4 +1,5 @@
 # coding=utf-8
+# This file was changed by ComfyUI-ScaleRAE; scale_rae_comfy/vendor/UPSTREAM.md lists the changes.
 # Copyright 2022 Facebook AI and The HuggingFace Inc. team. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");

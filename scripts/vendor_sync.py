@@ -46,15 +46,19 @@ _DOC_EXAMPLE_LINES = (
 )
 
 
+NOTICE = "# This file was changed by ComfyUI-ScaleRAE; scale_rae_comfy/vendor/UPSTREAM.md lists the changes.\n"
+
+
 def patch(rel: str, text: str) -> str:
-    """The pack's edits of one PATCHED upstream file (str -> str, LF line endings)."""
+    """The pack's edits of one PATCHED upstream file (str -> str, LF line endings). Each patched file starts with NOTICE (after a coding
+    declaration, which must stay on the first line)."""
     lines = text.splitlines(keepends=True)
     if rel.endswith("lightningDiT.py"):
         # commented-out TPU sharding code reads a launcher environment variable; drop those comment lines
         kept = [ln for ln in lines if not (ln.lstrip().startswith("#") and "os.getenv(" in ln)]
         if len(lines) - len(kept) != 9:
             raise ValueError(f"{rel}: expected 9 commented os.getenv lines, found {len(lines) - len(kept)}")
-        return "".join(kept)
+        return NOTICE + "".join(kept)
     if rel.endswith("decoder.py"):
         if text.count(_PRUNE_OLD) != 2:
             raise ValueError(f"{rel}: expected the prune import twice")
@@ -63,7 +67,9 @@ def patch(rel: str, text: str) -> str:
         kept = [ln for ln in lines if ln not in _DOC_EXAMPLE_LINES]
         if len(lines) - len(kept) != 6:
             raise ValueError(f"{rel}: expected the docstring example lines twice")
-        return "".join(kept)
+        if not kept[0].startswith("# coding"):
+            raise ValueError(f"{rel}: expected a coding declaration on the first line")
+        return kept[0] + NOTICE + "".join(kept[1:])
     raise KeyError(rel)
 
 

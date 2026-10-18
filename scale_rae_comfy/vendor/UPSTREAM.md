@@ -20,6 +20,9 @@ byte, and `MANIFEST.sha256` lists the SHA-256 of every file here.
 
 ## Patched (no change to the code that runs)
 
+Each patched file starts with a one-line comment saying that it was changed and pointing here (in `decoder.py` after its
+coding declaration).
+
 - `scale_rae/model/diffusion_loss/models/lightningDiT.py`: the 9 comment lines that contain `os.getenv(` (commented-out TPU sharding
   code) are removed. Nothing else changes; the test compares the parsed syntax trees of both versions.
 - `scale_rae/model/multimodal_decoder/decoder.py` (upstream keeps two copies of the same code in this file; both get the same edits):

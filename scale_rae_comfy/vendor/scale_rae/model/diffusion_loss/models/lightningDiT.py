@@ -1,3 +1,4 @@
+# This file was changed by ComfyUI-ScaleRAE; scale_rae_comfy/vendor/UPSTREAM.md lists the changes.
 import torch
 import torch.nn as nn
 from timm.models.vision_transformer import PatchEmbed, Mlp
