@@ -145,7 +145,7 @@ code, tools, workflows, docs and license files; no tests, scripts or images).
 
 ## 9. Automated tests (CI)
 
-`tests/` (42 tests) runs on the CPU with a tiny random model that has the official file layout (safetensors with the same tensor
+`tests/` (43 tests) runs on the CPU with a tiny random model that has the official file layout (safetensors with the same tensor
 names, real tokenizer files, a `model.pt` decoder), so the real loader, sampler and decoder code run: prompt ids against the official
 ids, loading checks (missing tensors, wrong encoder space, inference mode, dtype on CPU), sampling (shape, range, reproducibility,
 global RNG untouched, step counts, guidance modes, the three `image_start` modes, restoring the DiT after an error), the nodes as

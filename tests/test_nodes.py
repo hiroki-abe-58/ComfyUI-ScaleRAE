@@ -103,6 +103,13 @@ def test_batch_uses_consecutive_seeds(comfy_nodes):
     assert [r["seed"] for r in json.loads(report)["images"]] == [5, 6]
 
 
+def test_batch_seeds_wrap_at_the_largest_seed(comfy_nodes):
+    handle = _handle(comfy_nodes)
+    batch, report = _t2i(comfy_nodes, handle, seed=2**64 - 1, batch_size=2)
+    zero, _ = _t2i(comfy_nodes, handle, seed=0)
+    assert [r["seed"] for r in json.loads(report)["images"]] == [2**64 - 1, 0] and torch.equal(batch[1:2], zero)
+
+
 def test_auto_decodes_the_text_once_per_batch(comfy_nodes, monkeypatch):
     runtime = node_runtime(comfy_nodes)
     calls = {"n": 0}

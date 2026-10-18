@@ -72,7 +72,7 @@ class ScaleRAETextToImage(io.ComfyNode):
             category="image/scale_rae",
             description=("Text-to-image with Scale-RAE: the language model reads the prompt, its latent queries condition a rectified-flow "
                          "DiT that samples encoder features, and the RAE decoder turns them into pixels. The WebSSL decoder outputs "
-                         "224 x 224 images. With batch_size > 1 the seeds are seed, seed + 1, ..."),
+                         "224 x 224 images. With batch_size > 1 the seeds are seed, seed + 1, ... (modulo 2^64)."),
             inputs=[
                 ScaleRAEModel.Input("model"),
                 io.String.Input("prompt", multiline=True, default="Can you create an image of a peaceful garden?", tooltip=PROMPT_HELP),
@@ -101,7 +101,7 @@ class ScaleRAETextToImage(io.ComfyNode):
             mode = image_start
             for i in range(batch_size):
                 base = i * calls
-                out = runtime.generate(loaded, prompt, int(seed) + i, guidance, steps, cfg_mode=cfg_mode, image_start=mode,
+                out = runtime.generate(loaded, prompt, (int(seed) + i) % 2**64, guidance, steps, cfg_mode=cfg_mode, image_start=mode,
                                        progress=lambda n, base=base: tick(base + n))
                 if mode != image_start:  # report what was asked for, and why the image was forced
                     out["report"].update(image_start=image_start, text_only_answer=reports[0]["text_only_answer"])
