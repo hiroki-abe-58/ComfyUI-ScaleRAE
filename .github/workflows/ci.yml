@@ -1,0 +1,105 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# CPU only. No trained weights are downloaded: the model tests and the real-queue check build a tiny random model in the official
+# folder layout. Only the five tokenizer files (about 5 MB) of the Scale-RAE model are fetched, at a pinned revision and SHA-256
+# checked, to test the prompt handling against ids recorded from the official CLI. The trained model (about 17.6 GB) is checked
+# outside CI; see docs/VERIFICATION.md.
+env:
+  COMFYUI_REF: v0.38.0
+  COMFYUI_COMMIT: 6b747c0428c343e1417219641db93a4fb7cb69ae
+  UPSTREAM_COMMIT: dab38002b4b42c2d2262776785276d410599a443
+  MODEL_REPO: nyu-visionx/Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL
+  MODEL_REVISION: fd1e77fbe2f6eb96307a2e9512a7201ab7e3408f
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+        python: ["3.12"]
+        torch: ["2.14.1"]
+        torchvision: ["0.29.1"]
+        transformers: ["4.50.3", "latest"]
+        include:
+          - os: ubuntu-24.04
+            python: "3.10"
+            torch: "2.8.0"
+            torchvision: "0.23.0"
+            transformers: "4.50.3"
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: ComfyUI-ScaleRAE
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Reference checkouts and the tokenizer files (pinned)
+        run: |
+          git -c core.autocrlf=false clone --quiet --depth 1 --branch $env:COMFYUI_REF https://github.com/Comfy-Org/ComfyUI.git refs/ComfyUI
+          if ((git -C refs/ComfyUI rev-parse HEAD) -ne $env:COMFYUI_COMMIT) { throw "ComfyUI commit mismatch" }
+          git -c core.autocrlf=false clone --quiet --filter=blob:none https://github.com/ZitengWangNYU/Scale-RAE.git refs/Scale-RAE
+          git -C refs/Scale-RAE -c core.autocrlf=false checkout --quiet $env:UPSTREAM_COMMIT
+          New-Item -ItemType Directory -Force refs/tokenizer | Out-Null
+          # tests/tokenizer_files.sha256: "<sha256>  <file name>" lines
+          foreach ($line in Get-Content ComfyUI-ScaleRAE/tests/tokenizer_files.sha256 | Where-Object { $_ -and -not $_.StartsWith("#") }) {
+            $expected, $name = $line -split "  ", 2
+            Invoke-WebRequest -UseBasicParsing -OutFile "refs/tokenizer/$name" "https://huggingface.co/$($env:MODEL_REPO)/resolve/$($env:MODEL_REVISION)/$name"
+            if ((Get-FileHash "refs/tokenizer/$name" -Algorithm SHA256).Hash.ToLower() -ne $expected) { throw "$name hash mismatch" }
+          }
+
+      - name: Install (CPU)
+        run: |
+          $ErrorActionPreference = "Stop"
+          $PSNativeCommandUseErrorActionPreference = $true   # a failing pip must fail the step
+          python -m pip install --upgrade pip
+          # CPU torch first: on Linux ComfyUI's unpinned `torch` requirement would otherwise pull the CUDA build and its libraries
+          pip install torch==${{ matrix.torch }} torchvision==${{ matrix.torchvision }} --index-url https://download.pytorch.org/whl/cpu
+          pip install -r refs/ComfyUI/requirements.txt -r ComfyUI-ScaleRAE/requirements.txt pytest ruff
+          if ("${{ matrix.transformers }}" -ne "latest") { pip install "transformers==${{ matrix.transformers }}" }
+          pip list
+
+      - name: Lint
+        run: ruff check --no-cache ComfyUI-ScaleRAE
+
+      - name: No absolute local paths in the repository
+        run: |
+          $files = git -C ComfyUI-ScaleRAE ls-files | Where-Object { $_ -notmatch '\.(png|jpg|webp)$' } | ForEach-Object { Join-Path ComfyUI-ScaleRAE $_ }
+          $hits = $files | Select-String -Pattern '[A-Za-z]:\\{1,2}[A-Za-z0-9_.-]+\\|/home/[a-z]+/|/Users/[A-Za-z]+/'
+          if ($hits) { $hits | ForEach-Object { "$($_.Path):$($_.LineNumber)" }; throw "absolute local path found" }
+
+      - name: Tests (references required, nothing may be skipped)
+        env:
+          SCALE_RAE_COMFYUI_DIR: ${{ github.workspace }}/refs/ComfyUI
+          SCALE_RAE_UPSTREAM_DIR: ${{ github.workspace }}/refs/Scale-RAE
+          SCALE_RAE_TOKENIZER_DIR: ${{ github.workspace }}/refs/tokenizer
+          SCALE_RAE_REQUIRE_REFERENCES: "1"
+        run: |
+          Set-Location ComfyUI-ScaleRAE
+          python -m pytest tests -q -rs -p no:cacheprovider -W ignore::DeprecationWarning -W ignore::FutureWarning
+
+      - name: Real ComfyUI queue on CPU (tiny random model)
+        run: |
+          python ComfyUI-ScaleRAE/scripts/ci_queue_check.py --comfyui refs/ComfyUI --tokenizer-dir refs/tokenizer --workdir queue-logs
+
+      - name: ComfyUI log on failure
+        if: failure()
+        run: |
+          if (Test-Path queue-logs/comfyui.log) { Get-Content queue-logs/comfyui.log -Tail 120 }

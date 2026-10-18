@@ -1,0 +1,6 @@
+{
+  "1": {"class_type": "ScaleRAELoader", "inputs": {"generator": "Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL", "decoder": "webssl300m_decoder", "dtype": "float32", "device": "auto", "keep_loaded": true}},
+  "2": {"class_type": "ScaleRAETextToImage", "inputs": {"model": ["1", 0], "prompt": "Can you create an image of a peaceful garden?", "seed": 42, "guidance": 1.0, "cfg_mode": "standard", "steps": 50, "batch_size": 1, "image_start": "auto"}},
+  "3": {"class_type": "SaveImage", "inputs": {"images": ["2", 0], "filename_prefix": "scale_rae/t2i"}},
+  "4": {"class_type": "PreviewAny", "inputs": {"source": ["2", 1]}}
+}

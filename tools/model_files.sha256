@@ -1,0 +1,19 @@
+# SHA-256 of every file tools/download_models.py fetches ("<sha256>  <folder>/<file>"), from the revisions this pack was verified with:
+# nyu-visionx/Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL @ fd1e77fbe2f6eb96307a2e9512a7201ab7e3408f
+# nyu-visionx/webssl300m_decoder @ 0e6a28d0744b31ac35624ecabadde20b540d8fa0
+30c79648b789828e65541aaa1e836e34f3e1024c4fddb69bc381cd231a281bd1  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/added_tokens.json
+e158cc171a38773950e92c533c69c43ca64ab8c4ca2e2c37b7fc5d0393929dd9  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/config.json
+741c282a9ec63ba726ebb66ad6dd572a1e35c600d8b6654348d67b801f553829  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/generation_config.json
+455e0caaa06abffc663e9282dfe71dde07fd1991eaf24146bf08793c4dba4497  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/merges.txt
+741138d6906c9ddcbac45380f447766b30192f297fca11482a5227f27f4ebd9b  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/model-00001-of-00004.safetensors
+6b839bc50d4925c1c4c25963f1447a49c2182ec5333dcb835f5a3c20149cdfd2  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/model-00002-of-00004.safetensors
+b352f758b604ba784b7896512f40fea4e01b58357106de9bd57aaef1809fab24  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/model-00003-of-00004.safetensors
+338ce3bcc9a90106745ed7b9c699742a412835be69448c6e7e0135463e9eb4ab  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/model-00004-of-00004.safetensors
+1b327a95e7974e42638fc4364a8a1b8153464b766ff0c217082ac56d3f63fea4  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/model.safetensors.index.json
+f035ba4c0d4ddf37c9a1d040a147417c204eb3b0ac8f88e6d7086d5b9ac42791  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/README.md
+7172ad8469f17a514fb19601e0aa34c28c24116ce78d4149fc7dcbcd13b481ad  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/special_tokens_map.json
+a76227d6ce6a3530a8cd4e102ef644491b12ac15003a5fe18b59f9d5dbb595d4  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/tokenizer_config.json
+87a257b04b17642a0688c98cd1df89c398bda4fee532d6f88b38a659ecb4ac8d  Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL/vocab.json
+6e0519d6cbd1d1067a28a431ea32595d0bb1077eb0ec2eaf446b5f502975c55b  webssl300m_decoder/config.json
+86a12e4e247d11be72170fa3463903023f465abc92ec1e4bda1073871709963e  webssl300m_decoder/model.pt
+8859210664c4969c4dc2ffd450284cc0d86d577587fdc4a1a65e736cc6680eca  webssl300m_decoder/README.md

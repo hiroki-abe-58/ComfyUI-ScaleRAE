@@ -1,0 +1,36 @@
+Scale-RAE for ComfyUI
+Copyright (c) 2026 hiroki-abe-58. Licensed under the MIT License (LICENSE).
+
+This node pack is an unofficial integration. It is not affiliated with or endorsed by the Scale-RAE authors (New York University),
+by Meta, by Alibaba (Qwen) or by Comfy Org.
+
+Third-party code included in this repository
+---------------------------------------------
+
+scale_rae_comfy/vendor/scale_rae
+    From https://github.com/ZitengWangNYU/Scale-RAE, commit dab38002b4b42c2d2262776785276d410599a443.
+    MIT License, Copyright (c) 2026 Shengbang Tong, Boyang Zheng, Ziteng Wang (scale_rae_comfy/vendor/LICENSE).
+    Copied files are unchanged; two files carry the documented edits listed in scale_rae_comfy/vendor/UPSTREAM.md, and four
+    small files are this pack's own shims. Parts of the upstream code are themselves derived from other projects, as their file
+    headers say:
+    - model/diffusion_loss/diffusion/*: modified from OpenAI's GLIDE, ADM (guided-diffusion) and IDDPM (improved-diffusion)
+      repositories (MIT License).
+    - model/diffusion_loss/models/lightningDiT.py: rotary embedding code from BAAI's EVA-02 (MIT License), based on
+      lucidrains/rotary-embedding-torch (MIT License).
+    - model/multimodal_decoder/decoder.py: based on the ViTMAE model of Hugging Face transformers,
+      Copyright 2022 Facebook AI and The HuggingFace Inc. team, Apache License 2.0 (the license header is kept in the file).
+
+scale_rae_comfy/qwen2.py
+    Own implementation of the Qwen2 decoder stack. Its structure and numerics follow the Qwen2 model of Hugging Face transformers
+    4.37 (Apache License 2.0), which the official Scale-RAE code uses.
+
+Models (not included)
+---------------------
+No model weights are included or downloaded by the nodes. tools/download_models.py fetches, when you run it:
+- nyu-visionx/Scale-RAE-Qwen1.5B_DiT2.4B-WebSSL (model card: MIT); its language model is fine-tuned from Qwen2.5-1.5B-Instruct
+  (Qwen's license terms for that model apply as stated by Qwen).
+- nyu-visionx/webssl300m_decoder (model card: MIT). It reconstructs images from the feature space of Meta's
+  facebook/webssl-dino300m-full2b-224 encoder, whose weights are licensed CC-BY-NC-4.0. This node pack does not download or run
+  that encoder; it only uses two published facts about it (feature width 1024 and its image mean / standard deviation). Whether
+  the NC terms of the encoder reach the decoder or the generator trained on its features is not settled by the model cards;
+  check them yourself before any commercial use.

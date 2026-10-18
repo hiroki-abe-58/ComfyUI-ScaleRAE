@@ -1,0 +1,26 @@
+[project]
+name = "scale-rae"
+description = "Scale-RAE for ComfyUI: text-to-image with the official Scale-RAE model (Qwen2.5-1.5B + 2.4B rectified-flow DiT in WebSSL representation space, RAE decoder), run in-process. Matches the official code bit for bit in the same environment."
+version = "0.1.0"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = ["transformers>=4.50.3", "timm>=0.9.16", "einops>=0.6.1", "safetensors>=0.4.2"]
+
+[project.urls]
+Repository = "https://github.com/hiroki-abe-58/ComfyUI-ScaleRAE"
+
+[tool.comfy]
+PublisherId = "hiroki-abe-58"
+DisplayName = "Scale-RAE for ComfyUI"
+Icon = ""
+
+[tool.ruff]
+line-length = 180
+target-version = "py310"
+extend-exclude = ["scale_rae_comfy/vendor/scale_rae"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
